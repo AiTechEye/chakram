@@ -20,7 +20,7 @@ on_use=function(itemstack, user, pointed_thing)
 	pos.y=pos.y+1.5
 	local m=minetest.add_entity(pos, "chakram:chakr_m")
 	chakram_max(m)
-	m:setvelocity({x=dir.x*veloc, y=dir.y*veloc, z=dir.z*veloc})
+	m:set_velocity({x=dir.x*veloc, y=dir.y*veloc, z=dir.z*veloc})
 	m:setyaw(user:get_look_yaw()+math.pi)
 	itemstack:take_item()
 	minetest.sound_play("chakram_throw", {pos=pos, gain = 1.0, max_hear_distance = 5,})
@@ -73,7 +73,7 @@ minetest.register_entity("chakram:chakr_m",{
 		if self.timer3>=2 then
 			if self.stuck==1 then 
 				minetest.add_item(self.object:get_pos(), "chakram:chakram_mese")
-				if self.ob then self.ob:set_detach() self.ob:setacceleration({x=0,y=-8,z=0}) end
+				if self.ob then self.ob:set_detach() self.ob:set_acceleration({x=0,y=-8,z=0}) end
 				self.object:remove()
 				return
 			else
@@ -131,7 +131,7 @@ minetest.register_entity("chakram:chakr_m",{
 			vec.x = vec.x * v / amount
 			vec.y = vec.y * v / amount
 			vec.z = vec.z * v / amount
-			self.object:setvelocity(vec)
+			self.object:set_velocity(vec)
 
 			for i, ob in pairs(minetest.get_objects_inside_radius(pos, 2)) do
 				if (not ob:get_luaentity()) and ob:get_player_name()==self.user_name then
@@ -183,3 +183,4 @@ minetest.register_node("chakram:light", {
 		minetest.remove_node(pos)
 	end,
 })
+

@@ -21,7 +21,7 @@ on_use=function(itemstack, user, pointed_thing)
 	pos.y=pos.y+1.5
 	local m=minetest.add_entity(pos, "chakram:chakr_w")
 	chakram_max(m)
-	m:setvelocity({x=dir.x*veloc, y=dir.y*veloc, z=dir.z*veloc})
+	m:set_velocity({x=dir.x*veloc, y=dir.y*veloc, z=dir.z*veloc})
 	m:setyaw(user:get_look_yaw()+math.pi)
 	itemstack:take_item()
 	minetest.sound_play("chakram_throw", {pos=pos, gain = 1.0, max_hear_distance = 5,})
@@ -125,7 +125,7 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 			vec.x = vec.x * v / amount
 			vec.y = vec.y * v / amount
 			vec.z = vec.z * v / amount
-			self.object:setvelocity(vec)
+			self.object:set_velocity(vec)
 			for i, ob in pairs(minetest.get_objects_inside_radius(pos, 2)) do
 				if (not ob:get_luaentity()) and ob:get_player_name()==self.user_name then
 					if self.object==nil or self.user==nil or self.user:get_pos()==nil  then
