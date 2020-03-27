@@ -1,6 +1,10 @@
-dofile(minetest.get_modpath("chakram") .. "/wood.lua")
-dofile(minetest.get_modpath("chakram") .. "/steel.lua")
-dofile(minetest.get_modpath("chakram") .. "/mese.lua")
+local MP = minetest.get_modpath(minetest.get_current_modname())
+dofile(MP .. "/wood.lua")
+dofile(MP .. "/steel.lua")
+dofile(MP .. "/mese.lua")
+
+local mcl = minetest.get_modpath("mcl_core")
+
 pvp=minetest.setting_getbool("enable_pvp")
 chakramshot_user=""
 chakramshot_user_name=""
@@ -28,33 +32,61 @@ function chakram_def(pos,def)
 	local n=minetest.registered_nodes[minetest.get_node(pos).name]
 	return n and n[def]
 end
+if mcl then
+    minetest.register_craft({
+        output = "chakram:chakram",
+        recipe = {
+            {"mcl_core:iron_ingot","","mcl_core:iron_ingot"},
+            {"","mcl_core:steelblock",""},
+            {"mcl_core:iron_ingot","","mcl_core:iron_ingot"},
+        }
+    })
 
-minetest.register_craft({
-	output = "chakram:chakram",
-	recipe = {
-		{"default:steel_ingot","","default:steel_ingot"},
-		{"","default:steelblock",""},
-		{"default:steel_ingot","","default:steel_ingot"},
-	}
-})
+    minetest.register_craft({
+        output = "chakram:chakram_mese",
+        recipe = {
+            {"mcl_ocean:prismarine_crystals","","mcl_ocean:prismarine_crystals"},
+            {"","mcl_ocean:prismarine",""},
+            {"mcl_ocean:prismarine_crystals","","mcl_ocean:prismarine_crystals"},
+        }
+    })
 
-minetest.register_craft({
-	output = "chakram:chakram_mese",
-	recipe = {
-		{"default:mese_crystal","","default:mese_crystal"},
-		{"","default:mese",""},
-		{"default:mese_crystal","","default:mese_crystal"},
-	}
-})
+    minetest.register_craft({
+        output = "chakram:chakram_wood",
+        recipe = {
+            {"mcl_core:stick","","mcl_core:stick"},
+            {"","group:wood",""},
+            {"mcl_core:stick","","mcl_core:stick"},
+        }
+    })
+else
+    minetest.register_craft({
+        output = "chakram:chakram",
+        recipe = {
+            {"default:steel_ingot","","default:steel_ingot"},
+            {"","default:steelblock",""},
+            {"default:steel_ingot","","default:steel_ingot"},
+        }
+    })
 
-minetest.register_craft({
-	output = "chakram:chakram_wood",
-	recipe = {
-		{"default:stick","","default:stick"},
-		{"","group:wood",""},
-		{"default:stick","","default:stick"},
-	}
-})
+    minetest.register_craft({
+        output = "chakram:chakram_mese",
+        recipe = {
+            {"default:mese_crystal","","default:mese_crystal"},
+            {"","default:mese",""},
+            {"default:mese_crystal","","default:mese_crystal"},
+        }
+    })
+
+    minetest.register_craft({
+        output = "chakram:chakram_wood",
+        recipe = {
+            {"default:stick","","default:stick"},
+            {"","group:wood",""},
+            {"default:stick","","default:stick"},
+        }
+    })
+end
 function chakram_drops(name)
 	local d=minetest.registered_nodes[name].drop
 	if d=="" or d==nil then return name end
@@ -69,4 +101,3 @@ function chakram_drops(name)
 	end
 	return d
 end
-
