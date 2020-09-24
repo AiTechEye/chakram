@@ -56,17 +56,5 @@ minetest.register_craft({
 	}
 })
 function chakram_drops(name)
-	local d=minetest.registered_nodes[name].drop
-	if d=="" or d==nil then return name end
-	if d.items then
-		if d.items[1].items and d.items[2] and d.items[2].items then
-			return d.items[math.random(1,2)].items[1]
-		end
-		if d.items[1].items then
-			return d.items[1].items[1]
-		end
-		return name
-	end
-	return d
+	return minetest.get_node_drops(name)[1] or "air"
 end
-
