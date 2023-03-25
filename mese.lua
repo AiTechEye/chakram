@@ -21,7 +21,7 @@ on_use=function(itemstack, user, pointed_thing)
 	local m=minetest.add_entity(pos, "chakram:chakr_m")
 	chakram_max(m)
 	m:set_velocity({x=dir.x*veloc, y=dir.y*veloc, z=dir.z*veloc})
-	m:setyaw(user:get_look_horizontal()+math.pi)
+	m:set_yaw(user:get_look_horizontal()+math.pi)
 	itemstack:take_item()
 	minetest.sound_play("chakram_throw", {pos=pos, gain = 1.0, max_hear_distance = 5,})
 	return itemstack
