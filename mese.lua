@@ -166,10 +166,10 @@ minetest.register_entity("chakram:chakr_m",{
 minetest.register_node("chakram:light", {
 	description = "Light",
 	tiles = {"chakram_light.png",},
+	use_texture_alpha = "blend",
 	drop="",
 	light_source = 10,
 	paramtype = "light",
-	alpha = 50,
 	walkable=false,
 	drawtype = "airlike",
 	sunlight_propagates = false,
