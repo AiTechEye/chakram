@@ -86,7 +86,7 @@ minetest.register_entity("chakram:chakr_m",{
 		self.object:set_hp(999)
 		local pos=self.object:get_pos()
 		local name=minetest.get_node(pos).name
-			if name~="air" and (minetest.get_node_group(name, "snappy")>0 or minetest.get_node_group(name, "dig_immediate")>0 or minetest.get_node_group(name, "oddly_breakable_by_hand")>0 or minetest.get_node_group(name, "cracky")>0 ) and minetest.is_protected(pos,self.user:get_player_name())==false then
+			if name~="air" and (minetest.get_item_group(name, "snappy")>0 or minetest.get_item_group(name, "dig_immediate")>0 or minetest.get_item_group(name, "oddly_breakable_by_hand")>0 or minetest.get_item_group(name, "cracky")>0 ) and minetest.is_protected(pos,self.user:get_player_name())==false then
 				local meta=minetest.get_meta(pos)
 				if meta and meta:get_string("infotext")~="" then return self end
 				minetest.add_item(pos, chakram_drops(name))
