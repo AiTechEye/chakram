@@ -140,16 +140,14 @@ minetest.register_entity("chakram:chakr_m",{
 						self.stuck=1
 						return
 					end
+					local inv = self.user:get_inventory()
 					if self.ob and self.ob:get_attach() and self.ob:get_hp()~=nil and self.ob:get_hp()>0 then
-						self.ob:set_detach()
-						self.ob:set_hp(0)
-						self.ob:punch(self.user,1000,{full_punch_interval=1,damage_groups={fleshy=1000}})
+						inv:add_item("main", ItemStack(self.ob:get_luaentity().itemstring))
+						self.ob:remove()
 					end
 					if self.object:get_attach() then self.object:set_detach() return false end
-					if self.ob and self.ob==nil then return false end
 					self.user:get_inventory():add_item("main", ItemStack("chakram:chakram_mese"))
-					self.object:set_hp(0)
-					self.object:punch(self.object,10,{full_punch_interval=1,damage_groups={fleshy=4}})
+					self.object:remove()
 					break
 				end
 			end
