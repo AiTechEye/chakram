@@ -154,13 +154,14 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 						return
 					end
 
+					local inv = self.user:get_inventory()
 					if self.ob and self.ob:get_attach() and self.ob:get_hp()>0 then
+						inv:add_item("main", ItemStack(self.ob:get_luaentity().itemstring))
 						self.ob:set_detach()
-						self.ob:set_hp(0)
-						self.ob:punch(self.user,1000,{full_punch_interval=1,damage_groups={fleshy=4}})
+						self.ob:remove()
 					end
 					if self.object:get_attach() then self.object:set_detach() return false end
-					self.user:get_inventory():add_item("main", ItemStack("chakram:chakram"))
+					inv:add_item("main", ItemStack("chakram:chakram"))
 					self.object:remove()
 				end
 			end
