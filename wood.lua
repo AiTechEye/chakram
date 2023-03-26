@@ -22,7 +22,7 @@ on_use=function(itemstack, user, pointed_thing)
 	local m=minetest.add_entity(pos, "chakram:chakr_w")
 	chakram_max(m)
 	m:set_velocity({x=dir.x*veloc, y=dir.y*veloc, z=dir.z*veloc})
-	m:setyaw(user:get_look_yaw()+math.pi)
+	m:set_yaw(user:get_look_horizontal()+math.pi)
 	itemstack:take_item()
 	minetest.sound_play("chakram_throw", {pos=pos, gain = 1.0, max_hear_distance = 5,})
 	return itemstack
@@ -93,7 +93,7 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 		self.object:set_hp(999)
 		local pos=self.object:get_pos()
 			local name=minetest.get_node(pos).name
-			if name~="air" and (minetest.get_node_group(name, "snappy")>0 or minetest.get_node_group(name, "dig_immediate")>0) and minetest.is_protected(pos,self.user:get_player_name())==false then
+			if name~="air" and (minetest.get_item_group(name, "snappy")>0 or minetest.get_item_group(name, "dig_immediate")>0) and minetest.is_protected(pos,self.user:get_player_name())==false then
 					local meta=minetest.get_meta(pos)
 					if meta and meta:get_string("infotext")~="" then return self end
 
