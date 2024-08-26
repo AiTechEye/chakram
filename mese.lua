@@ -73,7 +73,11 @@ minetest.register_entity("chakram:chakr_m",{
 		if self.timer3>=2 then
 			if self.stuck==1 then 
 				minetest.add_item(self.object:get_pos(), "chakram:chakram_mese")
-				if self.ob then self.ob:set_detach() self.ob:set_acceleration({x=0,y=-8,z=0}) end
+				if self.ob then
+					self.ob:set_detach()
+					self.ob:get_luaentity():enable_physics()
+					self.ob:set_acceleration({x=0,y=-8,z=0})
+				end
 				self.object:remove()
 				return
 			else
@@ -107,6 +111,7 @@ minetest.register_entity("chakram:chakr_m",{
 					self.stuck=1
 					self.ob=ob
 					ob:set_attach(self.object, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
+					ob:get_luaentity():disable_physics()
 					self.timer3=-4
 					break
 				end
@@ -140,13 +145,12 @@ minetest.register_entity("chakram:chakr_m",{
 						self.stuck=1
 						return
 					end
-					local inv = self.user:get_inventory()
 					if self.ob and self.ob:get_attach() and self.ob:get_hp()~=nil and self.ob:get_hp()>0 then
-						inv:add_item("main", ItemStack(self.ob:get_luaentity().itemstring))
+						minetest.handle_node_drops(self.ob:get_pos(), { self.ob:get_luaentity().itemstring }, self.user)
 						self.ob:remove()
 					end
 					if self.object:get_attach() then self.object:set_detach() return false end
-					self.user:get_inventory():add_item("main", ItemStack("chakram:chakram_mese"))
+					minetest.handle_node_drops(self.user:get_pos(), { "chakram:chakram_mese" }, self.user)
 					self.object:remove()
 					break
 				end
