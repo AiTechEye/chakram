@@ -79,7 +79,11 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 		if self.timer3>=2 then
 			if self.stuck==1 then 
 				minetest.add_item(self.object:get_pos(), "chakram:chakram")
-				if self.ob then self.ob:set_detach() self.ob:set_acceleration({x=0,y=-8,z=0}) end
+				if self.ob then
+					self.ob:set_detach()
+					self.ob:set_acceleration({x=0,y=-8,z=0})
+					self.ob:get_luaentity():enable_physics()
+				end
 				self.object:set_hp(0)
 				self.object:punch(self.object,10,{full_punch_interval=1,damage_groups={fleshy=4}})
 				return
@@ -97,6 +101,7 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 					self.stuck=1
 					self.ob=ob
 					ob:set_attach(self.object, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
+					ob:get_luaentity():disable_physics()
 					self.timer3=-2
 					break
 				end
@@ -154,14 +159,13 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 						return
 					end
 
-					local inv = self.user:get_inventory()
 					if self.ob and self.ob:get_attach() and self.ob:get_hp()>0 then
-						inv:add_item("main", ItemStack(self.ob:get_luaentity().itemstring))
+						minetest.handle_node_drops( self.ob:get_pos(), { self.ob:get_luaentity().itemstring }, self.user)
 						self.ob:set_detach()
 						self.ob:remove()
 					end
 					if self.object:get_attach() then self.object:set_detach() return false end
-					inv:add_item("main", ItemStack("chakram:chakram"))
+					minetest.handle_node_drops(self.user:get_pos(), { "chakram:chakram_mese" }, self.user)
 					self.object:remove()
 				end
 			end
