@@ -21,7 +21,7 @@ on_use=function(itemstack, user, pointed_thing)
 	local m=minetest.add_entity(pos, "chakram:chakr")
 	chakram_max(m)
 	m:set_velocity({x=dir.x*veloc, y=dir.y*veloc, z=dir.z*veloc})
-	m:setyaw(user:get_look_yaw()+math.pi)
+	m:set_yaw(user:get_look_horizontal()+math.pi)
 	itemstack:take_item()
 	minetest.sound_play("chakram_throw", {pos=pos, gain = 1.0, max_hear_distance = 5,})
 	return itemstack
@@ -79,7 +79,11 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 		if self.timer3>=2 then
 			if self.stuck==1 then 
 				minetest.add_item(self.object:get_pos(), "chakram:chakram")
-				if self.ob then self.ob:set_detach() self.ob:set_acceleration({x=0,y=-8,z=0}) end
+				if self.ob then
+					self.ob:set_detach()
+					self.ob:set_acceleration({x=0,y=-8,z=0})
+					self.ob:get_luaentity():enable_physics()
+				end
 				self.object:set_hp(0)
 				self.object:punch(self.object,10,{full_punch_interval=1,damage_groups={fleshy=4}})
 				return
@@ -97,6 +101,7 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 					self.stuck=1
 					self.ob=ob
 					ob:set_attach(self.object, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
+					ob:get_luaentity():disable_physics()
 					self.timer3=-2
 					break
 				end
@@ -110,7 +115,7 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 
 		if self.stuck==0 then
 			local name=minetest.get_node(pos).name
-			if name~="air" and (minetest.get_node_group(name, "snappy")>0 or minetest.get_node_group(name, "dig_immediate")>0 or minetest.get_node_group(name, "oddly_breakable_by_hand")>0) and minetest.is_protected(pos,self.user:get_player_name())==false then
+			if name~="air" and (minetest.get_item_group(name, "snappy")>0 or minetest.get_item_group(name, "dig_immediate")>0 or minetest.get_item_group(name, "oddly_breakable_by_hand")>0) and minetest.is_protected(pos,self.user:get_player_name())==false then
 
 				local meta=minetest.get_meta(pos)
 				if meta and meta:get_string("infotext")~="" then return self end
@@ -155,12 +160,12 @@ on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 					end
 
 					if self.ob and self.ob:get_attach() and self.ob:get_hp()>0 then
+						minetest.handle_node_drops( self.ob:get_pos(), { self.ob:get_luaentity().itemstring }, self.user)
 						self.ob:set_detach()
-						self.ob:set_hp(0)
-						self.ob:punch(self.user,1000,{full_punch_interval=1,damage_groups={fleshy=4}})
+						self.ob:remove()
 					end
 					if self.object:get_attach() then self.object:set_detach() return false end
-					self.user:get_inventory():add_item("main", ItemStack("chakram:chakram"))
+					minetest.handle_node_drops(self.user:get_pos(), { "chakram:chakram_mese" }, self.user)
 					self.object:remove()
 				end
 			end
